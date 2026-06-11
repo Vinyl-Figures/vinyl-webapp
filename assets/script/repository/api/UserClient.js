@@ -1,4 +1,4 @@
-import User from '../model/User.js';
+import User from '../model/User.js'
 
 /**
  * Classe responsável por realizar as operações de autenticação do usuário, 
@@ -7,17 +7,14 @@ import User from '../model/User.js';
 export class UserClient {
 
     constructor() {
-        this.baseUrl = 'https://vinyl-store-api/user';
+        this.baseUrl = 'https://vinyl-store-api/user'
     }
 
     /**
-     * Realiza a autenticação do usuário, enviando o email e senha para o servidor 
-     * e recebendo os dados do usuário caso a autenticação seja bem-sucedida.
-     * 
+     * Realiza a autenticação do usuário, enviando o email e senha para o servidor.
      * @param {string} email - O email digitado pelo usuário
      * @param {string} password - A senha digitada pelo usuário
-     * @returns Objeto User populado com id, nome e opções de acessibilidade do usuário
-     * 
+     * @returns {Promise<User>} Objeto User populado com id, nome e opções de acessibilidade do usuário
      * @throws Erro com mensagem amigável caso a resposta do servidor seja inválida ou a autenticação falhe
      */
     async signIn(email, password) {
@@ -30,10 +27,7 @@ export class UserClient {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    email: email,
-                    password: password
-                })
+                body: JSON.stringify({ email, password })
             }
         )
 
@@ -42,26 +36,20 @@ export class UserClient {
 
             if (data.status === 'success') {
                 return new User(data.id, data.name, data.accessibility_options)
-
             } else {
                 throw new Error(data.message)
-
             }
-
         } else {
             throw new Error('Erro ao consultar servidor, tente novamente.')
-
         }
     }
 
     /**
-     * Realiza o cadastro do usuário, enviando o nome, email e senha para o servidor
-     * 
+     * Realiza o cadastro do usuário, enviando o nome, email e senha para o servidor.
      * @param {string} name - O nome digitado pelo usuário
      * @param {string} email - O email digitado pelo usuário
      * @param {string} password - A senha digitada pelo usuário
-     * @returns Id gerado para o usuário recém cadastrado
-     * 
+     * @returns {Promise<string|number>} Id gerado para o usuário recém cadastrado
      * @throws Erro com mensagem amigável caso a resposta do servidor seja inválida ou o cadastro falhe
      */
     async signUp(name, email, password) {
@@ -74,11 +62,7 @@ export class UserClient {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    name: name,
-                    email: email,
-                    password: password
-                })
+                body: JSON.stringify({ name, email, password })
             }
         )
 
@@ -87,30 +71,23 @@ export class UserClient {
 
             if (data.status === 'success') {
                 return data.id
-
             } else {
                 throw new Error(data.message)
-
             }
-
         } else {
             throw new Error('Erro ao consultar servidor, tente novamente.')
-
         }
     }
 
     /**
-     * Atualiza as opções de acessibilidade do usuário, enviando o id do usuário 
-     * e a lista de opções selecionadas para o servidor.
-     * 
-     * @param {number} userId - O id do usuário para o qual as opções de acessibilidade devem ser atualizadas
-     * @param {list[string]} options - Lista de opções de acessibilidade selecionadas pelo usuário
-     * @returns Sem retono
-     * 
+     * Atualiza as opções de acessibilidade do usuário.
+     * @param {number|string} userId - O id do usuário
+     * @param {string[]} options - Lista de opções de acessibilidade selecionadas pelo usuário
+     * @returns {Promise<void>}
      * @throws Erro com mensagem amigável caso a resposta do servidor seja inválida ou a atualização falhe
      */
     async updateAcessibilityOptions(userId, options) {
-        const endpoint = `${this.baseUrl}/accessibility-options?userId=${userId}?options=${JSON.stringify(options)}`
+        const endpoint = `${this.baseUrl}/accessibility-options?userId=${userId}&options=${encodeURIComponent(JSON.stringify(options))}`
 
         const response = await fetch(endpoint)
 
@@ -119,15 +96,11 @@ export class UserClient {
 
             if (data.status === 'success') {
                 return
-
             } else {
                 throw new Error(data.message)
-
             }
-
         } else {
             throw new Error('Erro ao consultar servidor, tente novamente.')
-
         }
     }
 }
