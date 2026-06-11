@@ -14,7 +14,7 @@ vinyl-webapp
 │  │  ├─ /controller # ───+
 │  │  ├─ /model           |
 │  │  ├─ /repository/api  |
-│  │  └─ /view       # ───+── MVC clássico + Repository com clients da [api do projeto](https://github.com/Vinyl-Figures/vinyl-api)
+│  │  └─ /view       # ───+── MVC clássico + Repository com clients da api do projeto
 |  |
 │  └─ /style # Toda parte de estilização com css
 |
